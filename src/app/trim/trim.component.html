@@ -1,0 +1,65 @@
+<nav class="navbar navbar-light bg-light" style="margin-bottom: 10px;">
+  <a class="navbar-brand">
+    <button *ngIf="trim" class="btn btn-outline-success my-2 my-sm-0" type="submit"
+            routerLink="/model/{{trim.model.id}}"><i
+      class="fa fa-arrow-left"></i> Back to trims
+    </button>
+  </a>
+</nav>
+<div class="container-fluid">
+  <div class="col-md-12">
+    <div class="row">
+      <div class="col-md-2">
+      </div>
+      <div class="col-md-8">
+        <div *ngIf="trim">
+          <h1 class="block-view"
+              style="font-size: 50px;padding-bottom: 40px">{{trim.model.brand.name}} {{trim.model.name}}
+            - {{trim.name}}</h1>
+          <div *ngIf="trim.model.imageUrl" class="text-center" style="height: 200px;">
+            <img src="http://localhost:8080/images/{{trim.model.imageUrl}}"
+                 class="center-block" alt="No image" style="height: 200px;">
+          </div>
+
+          <div class="col-md-12 border" style="padding: 20px;">
+            <span>Engine: {{trim.engine}}</span><br/>
+            <span>Transmission: {{trim.transmission}}</span><br/>
+            <span>Body style: {{trim.bodyStyle}}</span><br/>
+            <span>Year built: {{trim.yearBuilt}}</span><br/>
+          </div>
+
+          <h1 style="font-size: 50px;padding-bottom: 40px;padding-top: 40px">Description</h1>
+
+          Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque maximus consectetur arcu, id suscipit quam
+          ullamcorper vel. Integer ut consectetur tortor. Morbi condimentum neque vitae arcu varius pellentesque.
+          Praesent a
+          dolor a lacus lacinia vestibulum. Lorem ipsum dolor sit amet, consectetur adipiscing elit. In elementum
+          placerat
+          risus convallis dictum. Morbi sit amet est sit amet orci consectetur finibus vitae et felis.
+
+          Donec iaculis mauris in varius convallis. Etiam odio leo, porttitor in nisl eu, tincidunt fermentum eros.
+          Nullam
+          ultricies diam non massa facilisis, sit amet tempor leo pharetra. Suspendisse blandit leo massa, non dapibus
+          est
+          semper eu. Sed sit amet viverra eros. Aenean porttitor lectus elit, eget accumsan enim ornare at. Aenean sed
+          lacinia sapien. Integer auctor felis tellus, sit amet condimentum lectus volutpat et. Praesent sit amet
+          volutpat
+          lacus, vitae aliquet enim. Aenean id elementum augue, eget egestas tortor. Sed gravida, ligula et ultrices
+          pharetra, nunc odio volutpat felis, quis lobortis orci urna in nisl. Integer molestie nec est id egestas. In
+          sed
+          purus sagittis, sagittis nunc ornare, pharetra erat. Ut vitae condimentum mi.
+
+          Praesent dignissim accumsan neque eget pharetra. Donec luctus lorem vitae ante aliquet, nec vulputate orci
+          scelerisque. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc consectetur massa sit amet pulvinar
+          porttitor. Sed rhoncus congue eros ut molestie. Maecenas id mi quam. Curabitur venenatis gravida lobortis.
+          Suspendisse quis quam tortor. Etiam lacinia dapibus justo, ornare vestibulum nibh pellentesque ac. Ut
+          imperdiet
+          volutpat auctor.
+
+        </div>
+      </div>
+      <div class="col-md-2">
+      </div>
+    </div>
+  </div>
+</div>

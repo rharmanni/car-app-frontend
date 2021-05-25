@@ -1,0 +1,22 @@
+.block-view{
+  display: flex; /* or inline-flex */
+  flex-direction: row;
+  justify-content: space-evenly;
+  margin: 2px;
+}
+
+button {
+  font-family: "Roboto Thin", sans-serif;
+  width: 120px;
+  margin: 2px;
+  height:80px;
+  border: none;
+  background-color: #0066ff; /* Green */
+  color: white;
+  border-radius: 20px;
+  font-size: 30px;
+}
+
+button:hover {
+  font-size: 40px;
+}

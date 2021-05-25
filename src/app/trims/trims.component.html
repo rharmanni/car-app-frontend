@@ -1,0 +1,222 @@
+<nav class="navbar navbar-light bg-light" style="margin-bottom: 10px;">
+  <a class="navbar-brand">
+    <button *ngIf="model" class="btn btn-outline-success my-2 my-sm-0" type="submit"
+            routerLink="/brand/{{model.brand.id}}"><i
+      class="fa fa-arrow-left"></i> Back to models
+    </button>
+<!--    <button class="btn btn-outline-success my-2 my-sm-0" type="submit">-->
+<!--      <i class="fa fa-search"></i> Search for trims-->
+<!--    </button>-->
+    <button type="button" class="btn btn-outline-success my-2 my-sm-0" data-toggle="modal" data-target="#exampleModal"
+            (click)="addInit($event)"><i class="fa fa-plus"></i> Add a trim
+    </button>
+  </a>
+</nav>
+<div class="container-fluid">
+  <div class="col-md-12">
+    <div class="row">
+      <div class="col-md-3 border" style="padding-top: 10px;">
+        <h2>Search for trim</h2>
+        <form [formGroup]="searchForm" (ngSubmit)="submitSearch(searchForm.value)">
+          <div class="form-row">
+            <div class="form-group col-md-6">
+              <label for="name-search">Name</label>
+              <input type="email" class="form-control" id="name-search" placeholder="Name" formControlName="name">
+              <p style="color:red" *ngIf="(searchForm.controls.name.invalid || searchForm.get('name').errors) &&
+        (searchForm.controls.name.dirty || searchForm.controls.name.touched)">
+                must be below 100 characters </p>
+            </div>
+            <div class="form-group col-md-6">
+              <label for="engine-search">Engine</label>
+              <input type="email" class="form-control" id="engine-search" placeholder="Name" formControlName="engine">
+              <p style="color:red" *ngIf="(searchForm.controls.engine.invalid || searchForm.get('engine').errors) &&
+        (searchForm.controls.engine.dirty || searchForm.controls.engine.touched)">
+                must be below 100 characters </p>
+            </div>
+            <div class="form-group col-md-6">
+              <label for="transmission-search">Transmission</label>
+              <input type="email" class="form-control" id="transmission-search" placeholder="Name"
+                     formControlName="transmission">
+              <p style="color:red" *ngIf="(searchForm.controls.transmission.invalid || searchForm.get('transmission').errors) &&
+        (searchForm.controls.transmission.dirty || searchForm.controls.transmission.touched)">
+                must be below 100 characters </p>
+            </div>
+            <div class="form-group col-md-6">
+              <label for="bodyStyle-search">Body Style</label>
+              <input type="email" class="form-control" id="bodyStyle-search" placeholder="Name"
+                     formControlName="bodyStyle">
+              <p style="color:red" *ngIf="(searchForm.controls.bodyStyle.invalid || searchForm.get('bodyStyle').errors) &&
+        (searchForm.controls.bodyStyle.dirty || searchForm.controls.bodyStyle.touched)">
+                must be below 100 characters </p>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group col-md-6">
+              <label for="yearBuilt-search">Year Built</label>
+              <div class="input-group mb-2">
+                <input type="text" class="form-control" id="yearBuilt-search" formControlName="yearBuilt"
+                       placeholder="Year built">
+                <p style="color:red" *ngIf="(searchForm.controls.yearBuilt.invalid || searchForm.get('yearBuilt').errors) &&
+                (searchForm.controls.yearBuilt.dirty || searchForm.controls.yearBuilt.touched)
+                "> must be numbers between 1800 and 2100</p>
+              </div>
+            </div>
+          </div>
+          <div style="text-align:center; padding-top: 20px;">
+            <button type="submit" class="btn btn-primary text-center" style="width: 200px;height: 80px;"><i
+              class="fa fa-search"></i> Search
+            </button>
+          </div>
+        </form>
+      </div>
+      <div class="col-md-9 border" style="padding-top: 10px;" *ngIf="model">
+        <h2>{{model.brand.name}} {{model.name}} trims</h2>
+        <table matSort (matSortChange)="sortData($event)" class="table table-hover" style="vertical-align: center;">
+          <thead>
+          <tr>
+            <th scope="col" mat-sort-header="name" style="width: 13%;">Name</th>
+            <th scope="col" style="width: 13%;">Engine</th>
+            <th scope="col" style="width: 13%;">Transmission</th>
+            <th scope="col" style="width: 13%;">Body style</th>
+            <th scope="col" mat-sort-header="yearBuilt" style="width: 13%;">Year built</th>
+            <th scope="col" style="width: 30%;"></th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr *ngFor="let trim of model.trims" routerLink="/trim/{{trim.id}}">
+            <!--            <td>-->
+            <!--              <div class="text-center"><img-->
+            <!--                src="https://i.pinimg.com/originals/32/c1/59/32c159b1b044420931ff60d76fdc8a42.png"-->
+            <!--                class="center-block" alt="Responsive image" style="height: 50px;"></div>-->
+            <!--            </td>-->
+            <th scope="row">{{trim.name}}</th>
+            <td style="vertical-align: center ">{{trim.engine}}</td>
+            <td>{{trim.transmission}}</td>
+            <td>{{trim.bodyStyle}}</td>
+            <td>{{trim.yearBuilt}}</td>
+            <td>
+              <button class="btn btn-primary" data-toggle="modal" data-target="#exampleModal"
+                      (click)="edit($event, trim)">
+                <i class="fa fa-pencil"></i> Update
+              </button>
+              <button class="btn btn-danger" (click)="remove($event, trim)"><i class="fa fa-times"></i> Remove</button>
+            </td>
+          </tr>
+          </tbody>
+        </table>
+        <!--        <div class="row">-->
+        <!--          <div *ngFor="let trim of model.trims" class="col-md-4">-->
+        <!--            <div class="col-md-12 border record" routerLink="/trim/{{trim.id}}">-->
+        <!--              <h5 style="padding-top: 6px;">{{trim.name}}</h5>-->
+        <!--              <span>Engine: {{trim.engine}}</span><br/>-->
+        <!--              <span>Transmission: {{trim.transmission}}</span><br/>-->
+        <!--              <span>Body style: {{trim.bodyStyle}}</span><br/>-->
+        <!--              <span>Year built: {{trim.yearBuilt}}</span>-->
+        <!--              <div class="text-center" style="height: 105px;">-->
+        <!--                <img *ngIf="trim.imageUrl" src="http://localhost:8080/images/{{trim.imageUrl}}"-->
+        <!--                     class="center-block" alt="No image" style="height: 100px;">-->
+        <!--              </div>-->
+        <!--              <div class="float-right" style="position: absolute;right:0;top:0;padding:2px;">-->
+        <!--                <button class="btn btn-primary" data-toggle="modal" data-target="#exampleModal"-->
+        <!--                        (click)="edit($event, trim)">-->
+        <!--                  <i class="fa fa-pencil"></i> Update-->
+        <!--                </button>-->
+        <!--                <button class="btn btn-danger" (click)="remove($event, trim)">-->
+        <!--                  <i class="fa fa-times"></i> Remove-->
+        <!--                </button>-->
+        <!--              </div>-->
+        <!--            </div>-->
+        <!--          </div>-->
+        <!--        </div>-->
+      </div>
+    </div>
+  </div>
+  <!-- Modal -->
+  <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+       aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <form [formGroup]="trimForm" (ngSubmit)="submitForm(trimForm.value, isUpdate)">
+          <div class="modal-header">
+            <div *ngIf="isUpdate; then thenBlock else elseBlock"></div>
+            <ng-template #thenBlock><h2>Update trim: {{trimForm.value.name}}</h2></ng-template>
+            <ng-template #elseBlock><h2>Add trim</h2></ng-template>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <div class="form-row">
+              <div class="form-group col-md-6">
+                <label for="name">Name</label>
+                <input type="text" class="form-control" id="name" formControlName="name" placeholder="Name"
+                       autocomplete="off">
+                <p style="color:red" *ngIf="(trimForm.controls.name.invalid || trimForm.get('name').errors) &&
+        (trimForm.controls.name.dirty || trimForm.controls.name.touched)">
+                  must be between 1 and 100 characters </p>
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="form-group col-md-6">
+                <label for="name">Engine</label>
+                <input type="text" class="form-control" id="engine" formControlName="engine" placeholder="Engine"
+                       autocomplete="off">
+                <p style="color:red" *ngIf="(trimForm.controls.engine.invalid || trimForm.get('engine').errors) &&
+        (trimForm.controls.engine.dirty || trimForm.controls.engine.touched)">
+                  Must be below 100 characters </p>
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="form-group col-md-6">
+                <label for="transmission">Transmission</label>
+                <input type="text" class="form-control" id="transmission" formControlName="transmission"
+                       placeholder="Transmission"
+                       autocomplete="off">
+                <p style="color:red" *ngIf="(trimForm.controls.transmission.invalid || trimForm.get('transmission').errors) &&
+        (trimForm.controls.transmission.dirty || trimForm.controls.transmission.touched)">
+                  Must be below 100 characters </p>
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="form-group col-md-6">
+                <label for="bodyStyle">Body Style</label>
+                <input type="text" class="form-control" id="bodyStyle" formControlName="bodyStyle"
+                       placeholder="Body style"
+                       autocomplete="off">
+                <p style="color:red" *ngIf="(trimForm.controls.bodyStyle.invalid || trimForm.get('bodyStyle').errors) &&
+        (trimForm.controls.bodyStyle.dirty || trimForm.controls.bodyStyle.touched)">
+                  Must be below 100 characters </p>
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="form-group col-md-6">
+                <label for="yearBuilt">Year built</label>
+                <input type="text" class="form-control" id="yearBuilt" formControlName="yearBuilt"
+                       placeholder="Year built"
+                       autocomplete="off">
+                <p style="color:red" *ngIf="(trimForm.controls.yearBuilt.invalid || trimForm.get('yearBuilt').errors) &&
+        (trimForm.controls.yearBuilt.dirty || trimForm.controls.yearBuilt.touched)">
+                  Must be between 1800 and 2100 </p>
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="image">Image</label>
+              <input type="file" class="form-control" id="image" formControlName="image" placeholder="Image"
+                     autocomplete="off" #image>
+              <p style="color:red;" *ngIf="trimForm.get('image').errors">
+                {{trimForm.get('image').errors['message']}}</p>
+              <input id="imageUrl" type="hidden" formControlName="imageUrl">
+              <!--              <div class="text-center"><img-->
+              <!--                src="https://upload.wikimedia.org/wikipedia/commons/thumb/f/f4/BMW_logo_%28gray%29.svg/1200px-BMW_logo_%28gray%29.svg.png"-->
+              <!--                class="center-block" alt="Responsive image" style="height: 200px;padding-top: 10px;"></div>-->
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+              <button type="submit" class="btn btn-primary">Save changes</button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>

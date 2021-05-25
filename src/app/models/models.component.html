@@ -1,0 +1,310 @@
+<nav class="navbar navbar-light bg-light" style="margin-bottom: 10px;">
+  <a class="navbar-brand">
+    <button *ngIf="brand" class="btn btn-outline-success my-2 my-sm-0" type="submit" routerLink="/brands"><i
+      class="fa fa-arrow-left"></i> Back to brands
+    </button>
+<!--    <button class="btn btn-outline-success my-2 my-sm-0" type="submit"><i class="fa fa-search"></i> Search for brand-->
+<!--    </button>-->
+    <button type="button" class="btn btn-outline-success my-2 my-sm-0" data-toggle="modal" data-target="#exampleModal"
+            (click)="addInit($event)"><i class="fa fa-plus"></i> Add a model
+    </button>
+  </a>
+</nav>
+<div class="container-fluid">
+  <div class="col-md-12">
+    <div class="row">
+      <div class="col-md-3 border" style="padding-top: 10px;">
+        <h2>Search for model</h2>
+        <form [formGroup]="searchForm" (ngSubmit)="submitSearch(searchForm.value)">
+          <div class="form-row">
+            <div class="form-group col-md-6">
+              <label for="name-search">Name</label>
+              <input type="email" class="form-control" id="name-search" placeholder="Name" formControlName="name">
+              <p style="color:red" *ngIf="(searchForm.controls.name.invalid || searchForm.get('name').errors) &&
+        (searchForm.controls.name.dirty || searchForm.controls.name.touched)">
+                must be below 100 characters </p>
+            </div>
+          </div>
+          <div style="text-align:center; padding-top: 20px;">
+            <button type="submit" class="btn btn-primary text-center" style="width: 200px;height: 80px;"><i
+              class="fa fa-search"></i> Search
+            </button>
+          </div>
+        </form>
+      </div>
+      <div class="col-md-9 border" style="padding-top: 10px;" *ngIf="brand">
+        <h2>{{brand.name}} models</h2>
+        <div class="row">
+          <div *ngFor="let model of brand.models" class="col-md-4">
+            <div class="col-md-12 border record" routerLink="/model/{{model.id}}">
+              <h2 style="padding-top: 6px;">{{model.name}}</h2>
+              <span
+                class="text-left">Generation: {{model.generation}} </span><br/><span>Date: {{model.yearIntroduction}}
+              - {{model.yearDiscontinued}}</span>
+              <div class="text-center" style="height: 105px;">
+                <img *ngIf="model.imageUrl" src="http://localhost:8080/images/{{model.imageUrl}}"
+                     class="center-block" alt="No image" style="height: 100px;">
+              </div>
+              <div class="float-right" style="position: absolute;right:0;top:0;padding:2px;">
+                <button class="btn btn-primary" data-toggle="modal" data-target="#exampleModal"
+                        (click)="edit($event, model)">
+                  <i class="fa fa-pencil"></i> Update
+                </button>
+                <button class="btn btn-danger" (click)="remove($event, model)">
+                  <i class="fa fa-times"></i> Remove
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- Modal -->
+  <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+       aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <form [formGroup]="modelForm" (ngSubmit)="submitForm(modelForm.value, isUpdate)">
+          <div class="modal-header">
+            <div *ngIf="isUpdate; then thenBlock else elseBlock"></div>
+            <ng-template #thenBlock><h2>Update model: {{modelForm.value.name}}</h2></ng-template>
+            <ng-template #elseBlock><h2>Add model</h2></ng-template>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <div class="form-row">
+              <div class="form-group col-md-6">
+                <label for="name">Name</label>
+                <input type="text" class="form-control" id="name" formControlName="name" placeholder="Name"
+                       autocomplete="off">
+                <p style="color:red" *ngIf="(modelForm.controls.name.invalid || modelForm.get('name').errors) &&
+        (modelForm.controls.name.dirty || modelForm.controls.name.touched)">
+                  must be between 1 and 100 characters </p>
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="form-group col-md-6">
+                <label for="name">Generation</label>
+                <input type="text" class="form-control" id="generation" formControlName="generation" placeholder="Name"
+                       autocomplete="off">
+                <p style="color:red" *ngIf="(modelForm.controls.generation.invalid || modelForm.get('generation').errors) &&
+        (modelForm.controls.generation.dirty || modelForm.controls.generation.touched)">
+                  must be between 1 and 100 characters </p>
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="form-group col-md-6">
+                <label for="from">Years of production</label>
+                <div class="input-group mb-2">
+                  <input type="text" class="form-control" id="from" formControlName="yearIntroduction"
+                         placeholder="From">
+                  <div class="input-group-prepend">
+                    <div class="input-group-text">-</div>
+                  </div>
+                  <input type="text" class="form-control" id="to" formControlName="yearDiscontinued" placeholder="To">
+                </div>
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="image">Image</label>
+              <input type="file" class="form-control" id="image" formControlName="image" placeholder="Image"
+                     autocomplete="off" #image>
+              <p style="color:red;" *ngIf="modelForm.get('image').errors">
+                {{modelForm.get('image').errors['message']}}</p>
+              <input id="imageUrl" type="hidden" formControlName="imageUrl">
+              <!--              <div class="text-center"><img-->
+              <!--                src="https://upload.wikimedia.org/wikipedia/commons/thumb/f/f4/BMW_logo_%28gray%29.svg/1200px-BMW_logo_%28gray%29.svg.png"-->
+              <!--                class="center-block" alt="Responsive image" style="height: 200px;padding-top: 10px;"></div>-->
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+              <button type="submit" class="btn btn-primary">Save changes</button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+
+  <!--    <div class="col-md-12 border" style="padding-top: 10px;">-->
+  <!--      <h2>Update brand</h2>-->
+
+  <!--    </div>-->
+  <!--  <div class="col-md-12">-->
+  <!--    <div class="row">-->
+  <!--      <div class="col-md-3 border" style="padding-top: 10px;">-->
+  <!--      </div>-->
+  <!--      <div class="col-md-9 border" style="padding-top: 10px;">-->
+  <!--        <h2>List of brands</h2>-->
+  <!--        <table class="table table-hover" style="vertical-align: center;">-->
+  <!--          <thead>-->
+  <!--          <tr>-->
+  <!--            <th scope="col" style="width: 3%;"></th>-->
+  <!--            <th scope="col" style="width: 20%;">Brand</th>-->
+  <!--            <th scope="col" style="width: 20%;">Country</th>-->
+  <!--            <th scope="col" style="width: 20%;">Date Founded</th>-->
+  <!--            <th scope="col" style="width: 15%;"></th>-->
+  <!--          </tr>-->
+  <!--          </thead>-->
+  <!--          <tbody>-->
+  <!--          <tr>-->
+  <!--            <td>-->
+  <!--              <div class="text-center"><img-->
+  <!--                src="https://i.pinimg.com/originals/32/c1/59/32c159b1b044420931ff60d76fdc8a42.png"-->
+  <!--                class="center-block" alt="Responsive image" style="height: 50px;"></div>-->
+  <!--            </td>-->
+  <!--            <th scope="row"><h5>Mercedes-Benz</h5></th>-->
+  <!--            <td>Germany</td>-->
+  <!--            <td>1900</td>-->
+  <!--            <td>-->
+  <!--              <button class="btn btn-primary"><i class="fa fa-pencil"></i> Update</button>-->
+  <!--              <button class="btn btn-danger"><i class="fa fa-times"></i> Remove</button>-->
+  <!--            </td>-->
+  <!--          </tr>-->
+  <!--          <tr>-->
+  <!--            <td>-->
+  <!--              <div class="text-center"><img-->
+  <!--                src="https://upload.wikimedia.org/wikipedia/commons/thumb/f/f4/BMW_logo_%28gray%29.svg/1200px-BMW_logo_%28gray%29.svg.png"-->
+  <!--                class="center-block" alt="Responsive image" style="height: 50px;"></div>-->
+  <!--            </td>-->
+  <!--            <th scope="row"><h5>BMW</h5></th>-->
+  <!--            <td>Germany</td>-->
+  <!--            <td>1900</td>-->
+  <!--            <td>-->
+  <!--              <button class="btn btn-primary"><i class="fa fa-pencil"></i> Update</button>-->
+  <!--              <button class="btn btn-danger"><i class="fa fa-times"></i> Remove</button>-->
+  <!--            </td>-->
+  <!--          </tr>-->
+  <!--          <tr>-->
+  <!--            <td>-->
+  <!--              <div class="text-center"><img-->
+  <!--                src="https://upload.wikimedia.org/wikipedia/commons/thumb/7/7f/Audi_logo_detail.svg/1200px-Audi_logo_detail.svg.png"-->
+  <!--                class="center-block" alt="Responsive image" style="height: 50px;"></div>-->
+  <!--            </td>-->
+  <!--            <th scope="row"><h5>Audi</h5></th>-->
+  <!--            <td>Germany</td>-->
+  <!--            <td>1900</td>-->
+  <!--            <td>-->
+  <!--              <button class="btn btn-primary"><i class="fa fa-pencil"></i> Update</button>-->
+  <!--              <button class="btn btn-danger"><i class="fa fa-times"></i> Remove</button>-->
+  <!--            </td>-->
+  <!--          </tr>-->
+  <!--          <tr>-->
+  <!--            <td>-->
+  <!--              <div class="text-center"><img-->
+  <!--                src="https://upload.wikimedia.org/wikipedia/commons/thumb/6/6d/Volkswagen_logo_2019.svg/266px-Volkswagen_logo_2019.svg.png"-->
+  <!--                class="center-block" alt="Responsive image" style="height: 50px;"></div>-->
+  <!--            </td>-->
+  <!--            <th scope="row"><h5>Volkswagen</h5></th>-->
+  <!--            <td>Germany</td>-->
+  <!--            <td>1900</td>-->
+  <!--            <td>-->
+  <!--              <button class="btn btn-primary"><i class="fa fa-pencil"></i> Update</button>-->
+  <!--              <button class="btn btn-danger"><i class="fa fa-times"></i> Remove</button>-->
+  <!--            </td>-->
+  <!--          </tr>-->
+  <!--          <tr>-->
+  <!--            <td>-->
+  <!--              <div class="text-center"><img-->
+  <!--                src="https://upload.wikimedia.org/wikipedia/en/thumb/0/08/Renault_logo.svg/1200px-Renault_logo.svg.png"-->
+  <!--                class="center-block" alt="Responsive image" style="height: 50px;"></div>-->
+  <!--            </td>-->
+  <!--            <th scope="row"><h5>Renault</h5></th>-->
+  <!--            <td>France</td>-->
+  <!--            <td>1900</td>-->
+  <!--            <td>-->
+  <!--              <button class="btn btn-primary"><i class="fa fa-pencil"></i> Update</button>-->
+  <!--              <button class="btn btn-danger"><i class="fa fa-times"></i> Remove</button>-->
+  <!--            </td>-->
+  <!--          </tr>-->
+  <!--          <tr>-->
+  <!--            <td>-->
+  <!--              <div class="text-center"><img-->
+  <!--                src="https://i.pinimg.com/originals/51/03/f1/5103f1b8fc622e866c58357af040363b.png"-->
+  <!--                class="center-block" alt="Responsive image" style="height: 50px;"></div>-->
+  <!--            </td>-->
+  <!--            <th scope="row"><h5>Toyota</h5></th>-->
+  <!--            <td>Japan</td>-->
+  <!--            <td>1900</td>-->
+  <!--            <td>-->
+  <!--              <button class="btn btn-primary"><i class="fa fa-pencil"></i> Update</button>-->
+  <!--              <button class="btn btn-danger"><i class="fa fa-times"></i> Remove</button>-->
+  <!--            </td>-->
+  <!--          </tr>-->
+  <!--          </tbody>-->
+  <!--        </table>-->
+  <!--      </div>-->
+  <!--    </div>-->
+  <!--  </div>-->
+</div>
+
+
+<!--<div class="flex-container">-->
+<!--  <div class="first">-->
+<!--    <form class="center-div" [formGroup]="modelForm" (ngSubmit)="submitForm(modelForm.value, isUpdate)">-->
+<!--      <div *ngIf="isUpdate; then thenBlock else elseBlock"></div>-->
+<!--      <ng-template #thenBlock><h2>Update a model</h2></ng-template>-->
+<!--      <ng-template #elseBlock><h2>Add a model</h2></ng-template>-->
+<!--      <input id="id" type="hidden" formControlName="id">-->
+<!--      <div>-->
+<!--        <label for="name">Name</label><br/>-->
+<!--        <input id="name" type="text" formControlName="name" autocomplete="off">-->
+<!--        &lt;!&ndash; Add the error message if server side or client side errors occur &ndash;&gt;-->
+<!--        <p style="color:red" *ngIf="(modelForm.controls.name.invalid || modelForm.get('name').errors) &&-->
+<!--        (modelForm.controls.name.dirty || modelForm.controls.name.touched)">-->
+<!--          must be between 1 and 100 characters </p>-->
+<!--        &lt;!&ndash; Another possibility is adding server side message &ndash;&gt;-->
+<!--        &lt;!&ndash; <p style="color:red;" *ngIf="modelForm.get('name').errors">&ndash;&gt;-->
+<!--        &lt;!&ndash; {{modelForm.get('name').errors['message']}}&ndash;&gt;-->
+<!--        &lt;!&ndash; </p>&ndash;&gt;-->
+<!--      </div>-->
+<!--      <div>-->
+<!--        <label for="generation">Generation</label><br/>-->
+<!--        <input id="generation" type="text" formControlName="generation" autocomplete="off">-->
+<!--        <p style="color:red" *ngIf="(modelForm.controls.generation.invalid || modelForm.get('generation').errors) &&-->
+<!--        (modelForm.controls.generation.dirty || modelForm.controls.generation.touched)">-->
+<!--          must be a number between 0 and 1000 </p>-->
+<!--      </div>-->
+<!--      <div>-->
+<!--        <label for="yearIntroduction">Year Introduction</label><br/>-->
+<!--        <input id="yearIntroduction" type="text" formControlName="yearIntroduction" autocomplete="off">-->
+<!--        <p style="color:red" *ngIf="(modelForm.controls.yearIntroduction.invalid || modelForm.get('yearIntroduction').errors) &&-->
+<!--        (modelForm.controls.yearIntroduction.dirty || modelForm.controls.yearIntroduction.touched)">-->
+<!--          must be a number between 1800 and 2100 </p>-->
+<!--      </div>-->
+<!--      <div>-->
+<!--        <label for="yearDiscontinued">Year Discontinued</label><br/>-->
+<!--        <input id="yearDiscontinued" type="text" formControlName="yearDiscontinued" autocomplete="off">-->
+<!--        <p style="color:red" *ngIf="(modelForm.controls.yearDiscontinued.invalid || modelForm.get('yearDiscontinued').errors) &&-->
+<!--        (modelForm.controls.yearDiscontinued.dirty || modelForm.controls.yearDiscontinued.touched)">-->
+<!--          must be a number between 1800 and 2100 </p>-->
+<!--      </div>-->
+<!--      <div>-->
+<!--        <label for="image">Image</label><br/>-->
+<!--        <input id="image" type="file" formControlName="image" autocomplete="off" #image>-->
+<!--      </div>-->
+<!--      <button class="button" type="submit" [disabled]="modelForm.invalid">Submit</button>-->
+<!--      <div *ngIf="isUpdate">-->
+<!--        <button (click)="cancelEdit($event)">Cancel</button>-->
+<!--      </div>-->
+<!--    </form>-->
+<!--  </div>-->
+<!--  <div class="second" *ngIf="brand">-->
+<!--    <h2>{{brand.name}}</h2>-->
+<!--    <div class="grid-container">-->
+<!--      <div *ngFor="let model of brand.models" class="grid-item" routerLink="/model/{{model.id}}">-->
+<!--        <span>{{model.name}}</span>-->
+<!--        <div style="position: absolute; top: 5px; right: 5px;">-->
+<!--          <button (click)="edit($event, model)">Edit</button>-->
+<!--          <button (click)="remove($event, model)">Remove</button>-->
+<!--        </div>-->
+<!--      </div>-->
+<!--    </div>-->
+<!--  </div>-->
+<!--</div>-->

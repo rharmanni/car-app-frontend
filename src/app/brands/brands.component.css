@@ -1,0 +1,51 @@
+.record:hover {
+  border-color: darkgray !important;
+}
+
+/*button {*/
+/*  font-family: "Roboto Thin", sans-serif;*/
+/*  width: 120px;*/
+/*  margin: 2px;*/
+/*  height:40px;*/
+/*  border: none;*/
+/*  background-color: #0066ff; !* Green *!*/
+/*  color: white;*/
+/*  border-radius: 5px;*/
+/*  font-size: 15px;*/
+/*}*/
+
+/*button:disabled {*/
+/*  background-color: #0066ff; !* Green *!*/
+/*}*/
+
+/*.search-form {*/
+/*  height: 40px;*/
+/*  margin: 20px;*/
+/*}*/
+
+/*.search-form label{*/
+/*  font-size: 20px;*/
+/*  padding: 5px;*/
+/*}*/
+
+/*.search-form input{*/
+/*  height: 40px;*/
+/*  font-size: 20px;*/
+/*}*/
+
+/*.search-form input[type=submit]{*/
+/*  height: 40px;*/
+/*}*/
+
+/*.search-hover:hover {*/
+/*  cursor: pointer;*/
+/*}*/
+
+/*.search-container {*/
+
+/*  border-radius: 5px 5px 5px 5px;*/
+/*  border: 1px solid darkgray;*/
+/*  padding-top: 2px;*/
+/*  padding-left: 2px;*/
+/*  margin-bottom: 10px;*/
+/*}*/
